@@ -11,6 +11,7 @@ class SubSubCategory extends Model
         'sub_category_id',
         'name',
         'slug',
+        'category',
         'small_description',
         'image_sub_sub_category',
         'image_sub_sub_category_alt',

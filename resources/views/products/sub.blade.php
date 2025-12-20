@@ -48,10 +48,32 @@
     <div class="shop-page">
         <div class="outer-container shop-container">
             <div class="row clearfix" id="subSubCategoryContainer">
+                @php
+                    $categories = $subSubCategories->pluck('category')->filter()->unique();
+                @endphp
+
+                @if ($categories->count())
+                    <div class="container py-4">
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+
+                                <button class="btn filter-btn active mb-3" data-category="all">All</button>
+
+                                @foreach ($categories as $cat)
+                                    <button class="btn filter-btn mb-3" data-category="{{ $cat }}">
+                                        {{ $cat }}
+                                    </button>
+                                @endforeach
+
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 @if ($subSubCategories->count())
                     @foreach ($subSubCategories as $subSub)
-                        <div class="product-item sub-category-item col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="product-item sub-category-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
+                            data-category="{{ $subSub->category ?? 'uncategorized' }}">
 
                             <div class="inner-box">
                                 <a
@@ -133,4 +155,32 @@
     @else
         <p>No sub-sub categories found.</p>
     @endif --}}
+    @push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const buttons = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.sub-category-item');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            buttons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const category = this.dataset.category;
+
+            items.forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+});
+</script>
+@endpush
 @endsection
