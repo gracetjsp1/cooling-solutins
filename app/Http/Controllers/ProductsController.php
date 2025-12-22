@@ -39,25 +39,42 @@ class ProductsController extends Controller
     /**
      * Show sub category → list its sub-sub categories (with pagination)
      */
-    public function showSub($mainSlug, $subSlug)
+    public function showSub(Request $request, $mainSlug, $subSlug)
     {
-        // Get main product
         $mainProduct = MainProduct::where('slug', $mainSlug)->firstOrFail();
 
-        // Get sub category (WITHOUT loading subSubCategories here)
         $subCategory = SubCategory::where('slug', $subSlug)
             ->where('main_product_id', $mainProduct->id)
             ->firstOrFail();
 
-        // ✅ Paginate sub-sub categories
-        $subSubCategories = $subCategory->subSubCategories()->paginate(12);
+        // Selected category from URL
+        $selectedCategory = $request->query('category');
 
-        return view('products.sub', [
-            'mainProduct'       => $mainProduct,
-            'subCategory'       => $subCategory,
-            'subSubCategories'  => $subSubCategories,
-            'mainSlug'          => $mainSlug,
-        ]);
+        // Base query
+        $query = $subCategory->subSubCategories();
+
+        // Apply category filter
+        if ($selectedCategory && $selectedCategory !== 'all') {
+            $query->where('category', $selectedCategory);
+        }
+
+        // Paginated result
+        $subSubCategories = $query->paginate(12)->withQueryString();
+
+        // ALL categories (for buttons)
+        $allCategories = $subCategory->subSubCategories()
+            ->whereNotNull('category')
+            ->pluck('category')
+            ->unique()
+            ->values();
+
+        return view('products.sub', compact(
+            'mainProduct',
+            'subCategory',
+            'subSubCategories',
+            'allCategories',
+            'selectedCategory'
+        ));
     }
 
 
