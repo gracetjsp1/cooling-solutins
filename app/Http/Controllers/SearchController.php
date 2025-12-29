@@ -31,7 +31,7 @@ class SearchController extends Controller
                 $b->where('slug', $main);
             });
         })
-        ->paginate(2)
+        ->paginate(12)
         ->withQueryString();
 
     return view('search.results', compact('results', 'q', 'category', 'main'));

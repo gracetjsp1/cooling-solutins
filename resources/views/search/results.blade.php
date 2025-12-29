@@ -73,9 +73,11 @@
 
                                                 {{-- Content --}}
                                                 <div class="lower-content">
-                                                    <h3>{{ $item->name }}</h3>
+                                                    <h3>
+                                                        {{ \Illuminate\Support\Str::limit($item->name, 35) }}
+                                                    </h3>
                                                     <p>
-                                                        {{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}
+                                                        {{ \Illuminate\Support\Str::limit(strip_tags($item->small_description), 47) }}
                                                     </p>
                                                 </div>
 
