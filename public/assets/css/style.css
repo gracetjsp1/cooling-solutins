@@ -12198,7 +12198,10 @@ li {
 .prod-tabs .tabs-container .tab h6 {
   margin-bottom: 15px;
 }
+.prod-tabs .tabs-container .tab h2{
+  color: #000000;
 
+}
 .prod-tabs .tabs-container .tab h3 {
   font-size: 18px;
   font-weight: 400;
